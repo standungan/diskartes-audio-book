@@ -15,7 +15,9 @@ from whisper.utils import (
     str2bool,
 )
 
-writer = get_writer("tsv", "temp/")
+sub_folder = "diskartes_sub/"
+
+writer = get_writer("tsv", sub_folder)
 writer_args = {"highlight_words":False,
                "max_line_count":None,
                "max_line_width":None}
@@ -57,10 +59,8 @@ def main():
     st.title("Diskartes Audio Book")
 
     # sedikit description ttg website ini
-    st.subheader("sebuah aplikasi web sederhana "+
-                 "untuk mengubah file audio podcast dalam format MP3 " +
-                 "menjadi teks. Web app ini menggunakan " 
-                 "Whisper dari OpenAI.")
+    st.subheader("sebuah aplikasi web sederhana untuk mengubah file audio MP3 " +
+                 "menjadi teks. Web app ini menggunakan Whisper dari OpenAI.")
 
     # file Mp3 default dari folder mp3, ini gunakan file paling pertama saja
     file_list = os.listdir("diskartes_mp3/")
@@ -84,7 +84,7 @@ def main():
             subfile = selected_file[:-4] + ".tsv"
             writer(response, subfile, writer_args)
 
-            data=pd.read_csv("temp/"+subfile, sep="\t", header=0)
+            data=pd.read_csv(sub_folder+subfile, sep="\t", header=0)
             paragraphs = create_paragraphs(data)
             
             long_text = "" 
@@ -92,7 +92,7 @@ def main():
                 # st.write(paragraph)
                 long_text =long_text +  paragraph + "\n\n"
 
-            stx.scrollableTextbox(long_text,height = 300)
+            stx.scrollableTextbox(long_text,height = 200)
 
 
     
